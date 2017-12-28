@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorAccent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ch.appquest.boredboizz.flashcode.MainActivity">
+
+
+<FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4.81">
+
+    <!--<fragment
+        android:id="@+id/textTransmit_main"
+        android:name="ch.appquest.boredboizz.flashcode.receiverFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />-->
+
+
+
+
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="bottom">
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:background="@color/colorPrimary"
+            app:itemIconTint="@drawable/sender"
+            app:itemTextColor="@drawable/sender"
+            app:menu="@menu/navigation"
+            android:layout_weight="0.08" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_transmit"
+        android:icon="@mipmap/transmit"
+        android:title="@string/title_transmitter"
+        android:checked="true" />
+
+    <item
+        android:id="@+id/navigation_receive"
+        android:icon="@mipmap/receive"
+        android:title="@string/title_receiver" />
+
+</menu>
