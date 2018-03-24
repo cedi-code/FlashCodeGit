@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,23 +46,27 @@ public class ButtonTransmitFragment extends Fragment {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         // turn on flash
-                        switchButton.setTextColor(Color.WHITE);
-                        drawable.setStroke(15, Color.GREEN);
+                        switchButton.setText("On");
+                        switchButton.setTextColor(ContextCompat.getColor(getContext(),R.color.active));
+                        drawable.setStroke(15, ContextCompat.getColor(getContext(),R.color.active));
                         main.turnOnFlashLight();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        switchButton.setTextColor(Color.WHITE);
-                        drawable.setStroke(15, Color.GREEN);
+                        switchButton.setText("On");
+                        switchButton.setTextColor(ContextCompat.getColor(getContext(),R.color.active));
+                        drawable.setStroke(15, ContextCompat.getColor(getContext(),R.color.active));
                         main.turnOnFlashLight();
                         break;
                     case MotionEvent.ACTION_UP:
-                        switchButton.setTextColor(Color.BLACK);
-                        drawable.setStroke(5, Color.DKGRAY);
+                        switchButton.setText("Off");
+                        switchButton.setTextColor(ContextCompat.getColor(getContext(),R.color.inactive));
+                        drawable.setStroke(5, ContextCompat.getColor(getContext(),R.color.inactive));
                         main.turnOffFlashLight();
                         break;
                     default:
-                        switchButton.setTextColor(Color.BLACK);
-                        drawable.setStroke(5, Color.DKGRAY);
+                        switchButton.setText("Off");
+                        switchButton.setTextColor(ContextCompat.getColor(getContext(),R.color.inactive));
+                        drawable.setStroke(5, ContextCompat.getColor(getContext(),R.color.inactive));
                         main.turnOffFlashLight();
                         return false;
                 }

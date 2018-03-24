@@ -18,6 +18,6 @@
         />
     <stroke
         android:width="5dp"
-        android:color="#26FF1F"
+        android:color="@color/inactive"
         />
 </shape>

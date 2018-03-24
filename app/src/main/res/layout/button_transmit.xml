@@ -19,9 +19,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="65dp"
             android:background="@drawable/buttonshape"
-            android:text="ON"
+            android:text="OFF"
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/inactive"
             android:textSize="30sp" />
 
     </RelativeLayout>
