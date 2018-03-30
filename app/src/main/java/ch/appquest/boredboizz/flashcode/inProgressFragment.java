@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by Girardin on 27.12.2017.
+ * Created by Girardin on 24.03.2018.
  */
 
-// receiverFragment ist noch lehr wenn du willst kannst du objekte oder sogar Fragments hinzufügen
-public class receiverFragment extends Fragment {
+public class inProgressFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,9 +18,9 @@ public class receiverFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        View myFragmentView = inflater.inflate(R.layout.receiver_layout, container, false);
+        View myFragmentView = inflater.inflate(R.layout.in_progress, container, false);
+        // initzialisiert die Objekte im Fragment mit onklicks
 
         return myFragmentView;
     }

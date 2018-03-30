@@ -18,6 +18,7 @@ public class senderFragment extends Fragment {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public ViewPagerAdapter adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +41,12 @@ public class senderFragment extends Fragment {
 
         // erstellt die Tabs
         viewPager = (ViewPager) myFragmentView.findViewById(R.id.viewpager);
+        adapter = new ViewPagerAdapter(main.getSupportFragmentManager());
         setupViewPager(viewPager);
 
         // macht ein Layout für die Tabs
         tabLayout = (TabLayout) myFragmentView.findViewById(R.id.tabs);
+
         tabLayout.setupWithViewPager(viewPager);
 
         return myFragmentView;
@@ -52,10 +55,26 @@ public class senderFragment extends Fragment {
     // erstellt die Beiden Tabs Text und Manual
     private void setupViewPager(ViewPager viewPager) {
         final MainActivity main = (MainActivity) getActivity();
-        ViewPagerAdapter adapter = new ViewPagerAdapter(main.getSupportFragmentManager());
+
+
         // hier werden die Tabs hinzugefügt
-        adapter.addFragment(new TextTransmitFragment(), "Text");
-        adapter.addFragment(new ButtonTransmitFragment(), "Manual");
+        adapter.addFragment(main.textTransmit, "Text");
+        adapter.addFragment(main.buttonTransmit, "Button");
         viewPager.setAdapter(adapter);
+    }
+    public void changeViewPager(Fragment f, String text,Fragment ff, String text2) {
+            adapter.removeAllFragment();
+            adapter.addFragment(f,text);
+            adapter.addFragment(ff,text2);
+            // adapter.notifyDataSetChanged();
+            //https://stackoverflow.com/questions/7263291/viewpager-pageradapter-not-updating-the-view
+            viewPager.getAdapter().notifyDataSetChanged();
+            tabLayout.setupWithViewPager(viewPager);
+            // viewPager.setAdapter(adapter);
+
+
+
+
+
     }
 }

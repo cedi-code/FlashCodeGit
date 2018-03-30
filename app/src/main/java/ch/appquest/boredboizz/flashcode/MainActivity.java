@@ -24,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private String mCameraId;
     private CameraManager mCameraManager;
 
-    private Fragment receive;
-    private Fragment transmit;
+    private senderFragment transmit;
+    public TextTransmitFragment textTransmit;
+    public ButtonTransmitFragment buttonTransmit;
+    private inProgressFragment progress;
 
     // die Android Main methode wo alles initzialisiert wird
     @Override
@@ -34,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // erstellt die beiden Fragments und Plaziert sie auf den Content tag
+        // erstellt das Fragment und Plaziert sie auf den Content tag
+        textTransmit = new TextTransmitFragment();
+        buttonTransmit = new ButtonTransmitFragment();
+        progress = new inProgressFragment();
         transmit = new senderFragment();
-        receive = new receiverFragment();
+
         getSupportFragmentManager().beginTransaction().add(R.id.content, transmit).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.content, receive).commit();
 
         // initzialisiert die BottomNavigation inklusive den Click event.
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+
     }
     // Setzt ein Onklick even für die Bottom Navigation
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -62,17 +67,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentManager manager = getSupportFragmentManager();
+
+            // Die Fragments die geswitcht werden:
+            // TODO ALLE Fragmenst werden hier definiert.. ändern?
+
+
             // switch für welches icon ausgewählt wurde
             switch (item.getItemId()) {
                 case R.id.navigation_transmit:
-                    // das erste Fragment wird versteckt und das andere angezeigt
-                    manager.beginTransaction().hide(receive).commit();
-                    manager.beginTransaction().show(transmit).commit();
+                    // es wird jedes mal ein neuse Fragment erstellt
+                    transmit.changeViewPager(textTransmit, "Text",buttonTransmit, "Button");
                     return true;
                 case R.id.navigation_receive:
                     // das zweite Fragment wird versteckt und das andere angezeigt
-                    manager.beginTransaction().hide(transmit).commit();
-                    manager.beginTransaction().show(receive).commit();
+                    transmit.changeViewPager(progress, "Camera",buttonTransmit, "Touch");
                     return true;
             }
             return false;
