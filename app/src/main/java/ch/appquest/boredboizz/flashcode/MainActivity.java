@@ -15,10 +15,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     // in diesem Attribut wird die Nachricht gespeichert die man eingetipt hat
     private String message;
+
+
+
+    private static final  int REQUEST_CAMERA_PERMISSION_RESULT = 0;
 
     // für auf die Kamera zu zugreifen
     private String mCameraId;
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public TextTransmitFragment textTransmit;
     public ButtonTransmitFragment buttonTransmit;
     private inProgressFragment progress;
+    private cameraReceiveFragment cameraReceive;
 
     // die Android Main methode wo alles initzialisiert wird
     @Override
@@ -41,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         buttonTransmit = new ButtonTransmitFragment();
         progress = new inProgressFragment();
         transmit = new senderFragment();
-
+        cameraReceive = new cameraReceiveFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.content, transmit).commit();
 
         // initzialisiert die BottomNavigation inklusive den Click event.
@@ -79,8 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     transmit.changeViewPager(textTransmit, "Text",buttonTransmit, "Button");
                     return true;
                 case R.id.navigation_receive:
-                    // das zweite Fragment wird versteckt und das andere angezeigt
-                    transmit.changeViewPager(progress, "Camera",buttonTransmit, "Touch");
+                    transmit.changeViewPager(cameraReceive, "Camera",progress, "Touch");
                     return true;
             }
             return false;
@@ -140,4 +145,24 @@ public class MainActivity extends AppCompatActivity {
             alert.show();
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        if(requestCode == REQUEST_CAMERA_PERMISSION_RESULT){
+            if(grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(),"CameraReceiver can't run without camera services ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public String getmCameraId() {
+        return mCameraId;
+    }
+    public CameraManager getmCameraManager() {
+        return mCameraManager;
+    }
+    public static int getRequestCameraPermissionResult() {
+        return REQUEST_CAMERA_PERMISSION_RESULT;
+    }
+
 }
