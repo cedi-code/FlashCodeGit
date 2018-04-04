@@ -1,6 +1,7 @@
 package ch.appquest.boredboizz.flashcode;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * Created by Girardin on 27.12.2017.
@@ -19,6 +21,7 @@ public class senderFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     public ViewPagerAdapter adapter;
+    private View myFragmentView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +31,7 @@ public class senderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View myFragmentView = inflater.inflate(R.layout.send_layout, container, false);
+        myFragmentView = inflater.inflate(R.layout.send_layout, container, false);
         // initzialisiert das ganze Layout
         final MainActivity main = (MainActivity) getActivity();
 
@@ -41,6 +44,17 @@ public class senderFragment extends Fragment {
 
         // erstellt die Tabs
         viewPager = (ViewPager) myFragmentView.findViewById(R.id.viewpager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+            @Override
+            public void onPageSelected(int position) {
+                checkScroll(position);
+            }
+
+        });
         adapter = new ViewPagerAdapter(main.getSupportFragmentManager());
         setupViewPager(viewPager);
 
@@ -66,15 +80,23 @@ public class senderFragment extends Fragment {
             adapter.removeAllFragment();
             adapter.addFragment(f,text);
             adapter.addFragment(ff,text2);
+            checkScroll(viewPager.getCurrentItem());
             // adapter.notifyDataSetChanged();
             //https://stackoverflow.com/questions/7263291/viewpager-pageradapter-not-updating-the-view
             viewPager.getAdapter().notifyDataSetChanged();
             tabLayout.setupWithViewPager(viewPager);
             // viewPager.setAdapter(adapter);
-
-
-
-
+    }
+    private void checkScroll(int pos) {
+        if(adapter.getItem(pos).getClass().getSimpleName().equals("cameraReceiveFragment")) {
+            scrollDown(false);
+        }else {
+            scrollDown(true);
+        }
+    }
+    private void scrollDown(boolean on) {
+        AppBarLayout appBarLayout = (AppBarLayout) myFragmentView.findViewById(R.id.BarLayoutSend);
+        appBarLayout.setExpanded(on, true);
 
     }
 }
