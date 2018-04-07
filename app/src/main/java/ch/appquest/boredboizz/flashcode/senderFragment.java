@@ -22,6 +22,12 @@ public class senderFragment extends Fragment {
     private ViewPager viewPager;
     public ViewPagerAdapter adapter;
     private View myFragmentView;
+
+    public TextTransmitFragment textTransmit;
+    public ButtonTransmitFragment buttonTransmit;
+    private inProgressFragment progress;
+    public cameraReceiveFragment cameraReceive;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +36,10 @@ public class senderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        textTransmit = new TextTransmitFragment();
+        buttonTransmit = new ButtonTransmitFragment();
+        progress = new inProgressFragment();
+        cameraReceive = new cameraReceiveFragment();
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.send_layout, container, false);
         // initzialisiert das ganze Layout
@@ -51,7 +61,7 @@ public class senderFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {}
             @Override
             public void onPageSelected(int position) {
-                checkScroll(position);
+                checkFragment(position);
             }
 
         });
@@ -68,29 +78,39 @@ public class senderFragment extends Fragment {
 
     // erstellt die Beiden Tabs Text und Manual
     private void setupViewPager(ViewPager viewPager) {
-        final MainActivity main = (MainActivity) getActivity();
 
 
         // hier werden die Tabs hinzugefügt
-        adapter.addFragment(main.textTransmit, "Text");
-        adapter.addFragment(main.buttonTransmit, "Button");
+        adapter.addFragment(textTransmit, "Text");
+        adapter.addFragment(buttonTransmit, "Button");
         viewPager.setAdapter(adapter);
     }
-    public void changeViewPager(Fragment f, String text,Fragment ff, String text2) {
+    public void changeViewPager(boolean isTransmitePage) {
+
             adapter.removeAllFragment();
-            adapter.addFragment(f,text);
-            adapter.addFragment(ff,text2);
-            checkScroll(viewPager.getCurrentItem());
+            if(isTransmitePage) {
+                adapter.addFragment(textTransmit, "Text");
+                adapter.addFragment(buttonTransmit, "Button");
+            }else {
+                adapter.addFragment(cameraReceive, "Camera");
+                adapter.addFragment(progress, "Touch");
+            }
+            checkFragment(viewPager.getCurrentItem());
             // adapter.notifyDataSetChanged();
             //https://stackoverflow.com/questions/7263291/viewpager-pageradapter-not-updating-the-view
             viewPager.getAdapter().notifyDataSetChanged();
             tabLayout.setupWithViewPager(viewPager);
             // viewPager.setAdapter(adapter);
     }
-    private void checkScroll(int pos) {
+    private void checkFragment(int pos) {
         if(adapter.getItem(pos).getClass().getSimpleName().equals("cameraReceiveFragment")) {
+
             scrollDown(false);
         }else {
+            if(cameraReceive.getIsPlaying()){
+                cameraReceive.stopPlay();
+            }
+
             scrollDown(true);
         }
     }

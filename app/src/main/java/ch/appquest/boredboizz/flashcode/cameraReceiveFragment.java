@@ -10,8 +10,11 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.IntDef;
@@ -19,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Size;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -27,9 +31,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.jar.Manifest;
 
@@ -49,9 +57,75 @@ public class cameraReceiveFragment extends Fragment {
     private HandlerThread mBackgroundHandlerThread;
     private Handler mBackgroundHandler;
 
+
+
     private Size mPreviewSize;
+    private int mTotalRotation;
     private CaptureRequest.Builder mCaptureRecuestBuilder;
 
+    // Speichern der Videos TODO: entfernen nach Testing!
+    private File mVideoFolder;
+    private String mVideoFileName;
+
+    private Size mVideoSize;
+    private MediaRecorder mMediaRecorder;
+    private static int FRAMERATE = 10;
+
+    // TODO: entfernen nach Testing!
+    private void createVideoFolder() {
+        File movieFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        mVideoFolder = new File(movieFolder, "FlashCodeTests");
+        if(!mVideoFolder.exists()){
+            mVideoFolder.mkdirs();
+        }
+    }
+    // TODO: entfernen nach Testing!
+    private File createVideoFileName() throws IOException {
+        String timestamp = new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss").format(new Date());
+        String prepend = "FlashCodeTest_" + timestamp + "_";
+        File videoFile = File.createTempFile(prepend, ".mp4", mVideoFolder);
+        mVideoFileName = videoFile.getAbsolutePath();
+        return videoFile;
+    }
+    // TODO: entfernen nach Testing!
+    private void checkWriteStoragePermission(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                try
+                {
+                    createVideoFileName();
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                if(shouldShowRequestPermissionRationale(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                    Toast.makeText(getActivity().getApplicationContext(), "testing needs storage Permission", Toast.LENGTH_SHORT).show();
+                }
+                // anders gmacht mit em  1 !!
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},1 );
+            }
+        }else {
+            try
+            {
+                createVideoFileName();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void setupMediaRecorder() throws IOException{
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setOutputFile(mVideoFileName);
+        mMediaRecorder.setVideoEncodingBitRate(1000000);
+        mMediaRecorder.setVideoFrameRate(FRAMERATE);
+        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setOrientationHint(mTotalRotation);
+        mMediaRecorder.prepare();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +140,15 @@ public class cameraReceiveFragment extends Fragment {
         // initzialisiert die Objekte im Fragment mit onklicks
         // TODO main Activity braucht es nicht unbedingt!!!!
         final MainActivity main = (MainActivity) getActivity();
+
+        createVideoFolder();
+        mMediaRecorder = new MediaRecorder();
+
+
         initCamera(myFragmentView);
         initPlayButton(myFragmentView,main);
         initTextureView(myFragmentView,main);
+
         return myFragmentView;
     }
     @Override
@@ -87,13 +167,29 @@ public class cameraReceiveFragment extends Fragment {
     @Override
     public void onPause() {
         closeCamera();
-        isPlaying = false;
+        if(isPlaying) {
+            stopPlay();
+        }
 
         stopBackgroundThread();
 
         super.onPause();
     }
-
+    // TODO hier wird das Aufnehmen gestopt!!
+    public void stopPlay() {
+        isPlaying = false;
+        playButton.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+        mMediaRecorder.stop();
+        mMediaRecorder.reset();
+        startPreview();
+    }
+    public void startPlay() {
+        checkWriteStoragePermission();
+        isPlaying = true;
+        playButton.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+        startRecord();
+        mMediaRecorder.start();
+    }
     private void initPlayButton(View v, MainActivity main) {
         playButton = (ImageButton) v.findViewById(R.id.playButton);
 
@@ -103,12 +199,10 @@ public class cameraReceiveFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isPlaying) {
-                    playButton.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
-
+                    stopPlay();
                 }else {
-                    playButton.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+                    startPlay();
                 }
-                isPlaying = !isPlaying;
             }
         });
 
@@ -119,7 +213,19 @@ public class cameraReceiveFragment extends Fragment {
             @Override
             public void onOpened(@NonNull CameraDevice camera) {
                 mCameraDevice = camera;
-                startPreview();
+                // wird nur beim erstenStart der Applikation ausgeführt
+                if(isPlaying) {
+                    try {
+                        createVideoFileName();
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    startRecord();
+                    mMediaRecorder.start();
+                }else {
+                    startPreview();
+                }
+
             }
 
             @Override
@@ -141,6 +247,8 @@ public class cameraReceiveFragment extends Fragment {
             CameraCharacteristics cameraCharacteristics = main.getmCameraManager().getCameraCharacteristics(main.getmCameraId());
             StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), width, height );
+            mVideoSize = chooseOptimalSize(map.getOutputSizes(MediaRecorder.class), width, height );
+            //mVideoSize = map.getOutputSizes(MediaRecorder.class)[0];
 
         }catch(CameraAccessException e) {
             e.printStackTrace();
@@ -164,6 +272,42 @@ public class cameraReceiveFragment extends Fragment {
             }
 
         }catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void startRecord() {
+        try {
+            setupMediaRecorder();
+            SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
+            surfaceTexture.setDefaultBufferSize(mPreviewSize.getWidth(),mPreviewSize.getHeight());
+            Surface previewSurface = new Surface(surfaceTexture);
+            Surface recordSurface = mMediaRecorder.getSurface();
+            mCaptureRecuestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            mCaptureRecuestBuilder.addTarget(previewSurface);
+            mCaptureRecuestBuilder.addTarget(recordSurface);
+
+            mCameraDevice.createCaptureSession(Arrays.asList(previewSurface, recordSurface),
+                    new CameraCaptureSession.StateCallback() {
+                        @Override
+                        public void onConfigured(@NonNull CameraCaptureSession session) {
+                            try {
+                                session.setRepeatingRequest(
+                                        mCaptureRecuestBuilder.build(),null,null
+                                );
+                            }catch (CameraAccessException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+
+                        }
+                    }, null);
+
+        }catch (Exception e ){
             e.printStackTrace();
         }
 
@@ -265,6 +409,9 @@ public class cameraReceiveFragment extends Fragment {
             return choices[0];
         }
 
+    }
+    public boolean getIsPlaying() {
+        return isPlaying;
     }
 }
 

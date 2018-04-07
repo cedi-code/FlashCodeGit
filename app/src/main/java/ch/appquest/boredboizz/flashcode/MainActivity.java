@@ -30,10 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private CameraManager mCameraManager;
 
     private senderFragment transmit;
-    public TextTransmitFragment textTransmit;
-    public ButtonTransmitFragment buttonTransmit;
-    private inProgressFragment progress;
-    private cameraReceiveFragment cameraReceive;
+
+
 
     // die Android Main methode wo alles initzialisiert wird
     @Override
@@ -43,11 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // erstellt das Fragment und Plaziert sie auf den Content tag
-        textTransmit = new TextTransmitFragment();
-        buttonTransmit = new ButtonTransmitFragment();
-        progress = new inProgressFragment();
         transmit = new senderFragment();
-        cameraReceive = new cameraReceiveFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.content, transmit).commit();
 
         // initzialisiert die BottomNavigation inklusive den Click event.
@@ -82,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_transmit:
                     // es wird jedes mal ein neuse Fragment erstellt
-                    transmit.changeViewPager(textTransmit, "Text",buttonTransmit, "Button");
+                    transmit.changeViewPager(true);
                     return true;
                 case R.id.navigation_receive:
-                    transmit.changeViewPager(cameraReceive, "Camera",progress, "Touch");
+                    transmit.changeViewPager(false);
                     return true;
             }
             return false;
