@@ -158,5 +158,8 @@ public class MainActivity extends AppCompatActivity {
     public static int getRequestCameraPermissionResult() {
         return REQUEST_CAMERA_PERMISSION_RESULT;
     }
+    public Context getMainContext() {
+        return getApplicationContext();
+    }
 
 }

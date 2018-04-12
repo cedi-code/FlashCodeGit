@@ -2,6 +2,8 @@ package ch.appquest.boredboizz.flashcode;
 
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -10,19 +12,20 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+
 import android.media.MediaRecorder;
-import android.media.MediaScannerConnection;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.IntDef;
+
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Size;
-import android.util.SparseIntArray;
+
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -33,6 +36,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +62,7 @@ public class cameraReceiveFragment extends Fragment {
     private HandlerThread mBackgroundHandlerThread;
     private Handler mBackgroundHandler;
 
-
+    private encodeFootage mEncodeFootage;
 
     private Size mPreviewSize;
     private int mTotalRotation;
@@ -143,7 +148,7 @@ public class cameraReceiveFragment extends Fragment {
 
         createVideoFolder();
         mMediaRecorder = new MediaRecorder();
-
+        mEncodeFootage = new encodeFootage(main);
 
         initCamera(myFragmentView);
         initPlayButton(myFragmentView,main);
@@ -181,7 +186,11 @@ public class cameraReceiveFragment extends Fragment {
         playButton.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
         mMediaRecorder.stop();
         mMediaRecorder.reset();
+        // Decodiert die Aufnahme
+        mEncodeFootage.enCode(mVideoFileName,mVideoFolder);
+
         startPreview();
+
     }
     public void startPlay() {
         checkWriteStoragePermission();
@@ -189,6 +198,7 @@ public class cameraReceiveFragment extends Fragment {
         playButton.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
         startRecord();
         mMediaRecorder.start();
+
     }
     private void initPlayButton(View v, MainActivity main) {
         playButton = (ImageButton) v.findViewById(R.id.playButton);
@@ -248,6 +258,7 @@ public class cameraReceiveFragment extends Fragment {
             StreamConfigurationMap map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), width, height );
             mVideoSize = chooseOptimalSize(map.getOutputSizes(MediaRecorder.class), width, height );
+
             //mVideoSize = map.getOutputSizes(MediaRecorder.class)[0];
 
         }catch(CameraAccessException e) {
@@ -318,7 +329,9 @@ public class cameraReceiveFragment extends Fragment {
         Surface previewSurface = new Surface(surfaceTexture);
         try {
             mCaptureRecuestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+
             mCaptureRecuestBuilder.addTarget(previewSurface);
+
 
             mCameraDevice.createCaptureSession(Arrays.asList(previewSurface), new CameraCaptureSession.StateCallback() {
                 @Override
@@ -413,5 +426,6 @@ public class cameraReceiveFragment extends Fragment {
     public boolean getIsPlaying() {
         return isPlaying;
     }
+
 }
 

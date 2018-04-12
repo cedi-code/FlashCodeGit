@@ -23,10 +23,10 @@ public class senderFragment extends Fragment {
     public ViewPagerAdapter adapter;
     private View myFragmentView;
 
-    public TextTransmitFragment textTransmit;
-    public ButtonTransmitFragment buttonTransmit;
+    private TextTransmitFragment textTransmit;
+    private ButtonTransmitFragment buttonTransmit;
     private inProgressFragment progress;
-    public cameraReceiveFragment cameraReceive;
+    private cameraReceiveFragment cameraReceive;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,10 +85,10 @@ public class senderFragment extends Fragment {
         adapter.addFragment(buttonTransmit, "Button");
         viewPager.setAdapter(adapter);
     }
-    public void changeViewPager(boolean isTransmitePage) {
+    public void changeViewPager(boolean isTransmitPage) {
 
             adapter.removeAllFragment();
-            if(isTransmitePage) {
+            if(isTransmitPage) {
                 adapter.addFragment(textTransmit, "Text");
                 adapter.addFragment(buttonTransmit, "Button");
             }else {
