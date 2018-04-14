@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 /**
  * Created by Girardin on 27.12.2017.
@@ -26,7 +25,7 @@ public class senderFragment extends Fragment {
     private TextTransmitFragment textTransmit;
     private ButtonTransmitFragment buttonTransmit;
     private inProgressFragment progress;
-    private cameraReceiveFragment cameraReceive;
+    private Camera2BasicFragment camera2Basic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class senderFragment extends Fragment {
         textTransmit = new TextTransmitFragment();
         buttonTransmit = new ButtonTransmitFragment();
         progress = new inProgressFragment();
-        cameraReceive = new cameraReceiveFragment();
+        camera2Basic = Camera2BasicFragment.newInstance();
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.send_layout, container, false);
         // initzialisiert das ganze Layout
@@ -92,7 +91,7 @@ public class senderFragment extends Fragment {
                 adapter.addFragment(textTransmit, "Text");
                 adapter.addFragment(buttonTransmit, "Button");
             }else {
-                adapter.addFragment(cameraReceive, "Camera");
+                adapter.addFragment(camera2Basic, "Camera");
                 adapter.addFragment(progress, "Touch");
             }
             checkFragment(viewPager.getCurrentItem());
@@ -103,13 +102,13 @@ public class senderFragment extends Fragment {
             // viewPager.setAdapter(adapter);
     }
     private void checkFragment(int pos) {
-        if(adapter.getItem(pos).getClass().getSimpleName().equals("cameraReceiveFragment")) {
+        if(adapter.getItem(pos).getClass().getSimpleName().equals("Camera2BasicFragment")) {
 
             scrollDown(false);
         }else {
-            if(cameraReceive.getIsPlaying()){
+            /*if(cameraReceive.getIsPlaying()){
                 cameraReceive.stopPlay();
-            }
+            }*/
 
             scrollDown(true);
         }

@@ -1,6 +1,7 @@
 package ch.appquest.boredboizz.flashcode;
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class ButtonTransmitFragment extends Fragment {
         return myFragmentView;
     }
     // setzt den OnTouchListener und gibt dem switchButton den Button
+    @SuppressLint("ClickableViewAccessibility")
     private void initButton(View v) {
         switchButton = (Button) v.findViewById(R.id.switchButton);
 

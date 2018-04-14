@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.*;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -148,18 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"CameraReceiver can't run without camera services ", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-    public String getmCameraId() {
-        return mCameraId;
-    }
-    public CameraManager getmCameraManager() {
-        return mCameraManager;
-    }
-    public static int getRequestCameraPermissionResult() {
-        return REQUEST_CAMERA_PERMISSION_RESULT;
-    }
-    public Context getMainContext() {
-        return getApplicationContext();
     }
 
 }
