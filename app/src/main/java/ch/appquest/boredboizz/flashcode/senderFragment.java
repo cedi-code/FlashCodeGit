@@ -24,7 +24,7 @@ public class senderFragment extends Fragment {
 
     private TextTransmitFragment textTransmit;
     private ButtonTransmitFragment buttonTransmit;
-    private inProgressFragment progress;
+    private TouchFragment progress;
     private Camera2BasicFragment camera2Basic;
 
     @Override
@@ -37,7 +37,7 @@ public class senderFragment extends Fragment {
 
         textTransmit = new TextTransmitFragment();
         buttonTransmit = new ButtonTransmitFragment();
-        progress = new inProgressFragment();
+        progress = new TouchFragment();
         camera2Basic = Camera2BasicFragment.newInstance();
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.send_layout, container, false);

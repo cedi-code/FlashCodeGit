@@ -379,7 +379,7 @@ public class Camera2BasicFragment extends Fragment
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(lightPos[0] != 0) {
+                                    if(1 != 0) {
                                         lightPoints.setImageBitmap(encode.drawCircle(lightPos[0]*2,lightPos[1]*2,mTextureView.getWidth(),mTextureView.getHeight(),Color.GREEN));
                                     }else {
                                         lightPoints.setImageBitmap(null);
