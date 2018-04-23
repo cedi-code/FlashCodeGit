@@ -371,16 +371,25 @@ public class Camera2BasicFragment extends Fragment
                     // We have nothing to do when the camera preview is working normally.
                     // TODO get current Frame?
                     counterTest++;
-                    if(counterTest > 5) {
+                    if(counterTest >10) {
                         counterTest = 0;
                         Bitmap b = mTextureView.getBitmap(mTextureView.getWidth()/2,mTextureView.getHeight()/2);
-                        final int[] lightPos = encode.getLightPoints(b);
+                        int[] lightPosHolder;
+                        if(isPlaying) {
+                             lightPosHolder = encode.scanLightPoint(b);
+                        }else {
+                            lightPosHolder = encode.getLightPoints(b);
+                        }
+                        // encode.enhanceImage(b,1,-50f)
+                        final int[] lightPos = lightPosHolder;
+
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if(1 != 0) {
                                         lightPoints.setImageBitmap(encode.drawCircle(lightPos[0]*2,lightPos[1]*2,mTextureView.getWidth(),mTextureView.getHeight(),Color.GREEN));
+
                                     }else {
                                         lightPoints.setImageBitmap(null);
                                     }
@@ -1017,6 +1026,7 @@ public class Camera2BasicFragment extends Fragment
     }
     public void stopScan() {
         //playButton.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+        ArrayList<Integer> test = encode.getMsgListKamera();
         playButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.inactive));
         isPlaying = false;
     }
@@ -1024,7 +1034,7 @@ public class Camera2BasicFragment extends Fragment
         //playButton.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
         playButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.active));
         isPlaying = true;
-        showToast("Work in Progress!");
+
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
