@@ -39,5 +39,6 @@
                 android:background="@mipmap/rightarrow"
                 android:textColor="@color/active" />
         </LinearLayout>
+
     </RelativeLayout>
 </LinearLayout>

@@ -41,8 +41,11 @@ public class TextTransmitFragment extends Fragment{
                     @Override
                     public void onClick(View v) {
                         if(!mEdit.getText().toString().equals("")) {
-                            main.setMessage(mEdit.getText().toString());
-                            Toast.makeText(main.getApplicationContext(),main.getMessage(),Toast.LENGTH_LONG).show();
+                            String nachricht = mEdit.getText().toString();
+                            MorseMessage mm = new MorseMessage(main);
+                            MorseTranslater mt = new MorseTranslater();
+                            String[] morseCode = mt.textToMorse(nachricht);
+                            mm.transmitMorse(morseCode);
                         }else {
                             Toast.makeText(main.getApplicationContext(),"Bitte geben Sie eine Nachricht ein!",Toast.LENGTH_LONG).show();
                         }
