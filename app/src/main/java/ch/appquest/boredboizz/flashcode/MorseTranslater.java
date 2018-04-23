@@ -53,7 +53,9 @@ public class MorseTranslater {
 
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
-            morse[i] = morseTable[c - 97];
+            try{
+                morse[i] = morseTable[c - 97];
+            }catch(Exception e){}
         }
         return morse;
     }

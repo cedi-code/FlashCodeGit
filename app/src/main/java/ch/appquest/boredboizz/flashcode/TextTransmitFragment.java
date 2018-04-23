@@ -1,7 +1,11 @@
 package ch.appquest.boredboizz.flashcode;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +45,11 @@ public class TextTransmitFragment extends Fragment{
                     @Override
                     public void onClick(View v) {
                         if(!mEdit.getText().toString().equals("")) {
-                            String nachricht = mEdit.getText().toString();
+                            String nachricht = mEdit.getText().toString().toLowerCase();
                             MorseMessage mm = new MorseMessage(main);
                             MorseTranslater mt = new MorseTranslater();
                             String[] morseCode = mt.textToMorse(nachricht);
-                            mm.transmitMorse(morseCode);
+                            mm.transmitMorse(morseCode); //Hier werden die MorseSignale gesendet
                         }else {
                             Toast.makeText(main.getApplicationContext(),"Bitte geben Sie eine Nachricht ein!",Toast.LENGTH_LONG).show();
                         }
@@ -56,5 +60,4 @@ public class TextTransmitFragment extends Fragment{
                 }
         );
     }
-
 }
