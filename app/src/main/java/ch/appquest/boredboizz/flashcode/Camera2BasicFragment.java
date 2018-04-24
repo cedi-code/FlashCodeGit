@@ -61,6 +61,7 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -371,14 +372,14 @@ public class Camera2BasicFragment extends Fragment
                     // We have nothing to do when the camera preview is working normally.
                     // TODO get current Frame?
                     counterTest++;
-                    if(counterTest >10) {
+                    if(counterTest >5) {
                         counterTest = 0;
-                        Bitmap b = mTextureView.getBitmap(mTextureView.getWidth()/2,mTextureView.getHeight()/2);
+                        Bitmap b = mTextureView.getBitmap(mTextureView.getWidth(),mTextureView.getHeight());
                         int[] lightPosHolder;
                         if(isPlaying) {
                              lightPosHolder = encode.scanLightPoint(b);
                         }else {
-                            lightPosHolder = encode.getLightPoints(b);
+                            lightPosHolder = encode.getLightToch();
                         }
                         // encode.enhanceImage(b,1,-50f)
                         final int[] lightPos = lightPosHolder;
@@ -388,7 +389,7 @@ public class Camera2BasicFragment extends Fragment
                                 @Override
                                 public void run() {
                                     if(1 != 0) {
-                                        lightPoints.setImageBitmap(encode.drawCircle(lightPos[0]*2,lightPos[1]*2,mTextureView.getWidth(),mTextureView.getHeight(),Color.GREEN));
+                                        lightPoints.setImageBitmap(encode.drawCircle(lightPos[0],lightPos[1],mTextureView.getWidth(),mTextureView.getHeight(),Color.GREEN));
 
                                     }else {
                                         lightPoints.setImageBitmap(null);
@@ -457,6 +458,31 @@ public class Camera2BasicFragment extends Fragment
             process(result);
         }
 
+    };
+    private View.OnTouchListener tochLight = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int x = (int)event.getX();
+            int y = (int)event.getY();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+
+                    encode.setHellsterPunktX(x);
+                    encode.setHellsterPunktY(y);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    encode.setHellsterPunktX(x);
+                    encode.setHellsterPunktY(y);
+                    break;
+                case MotionEvent.ACTION_UP:
+
+                    break;
+                default:
+                    return false;
+
+            }
+            return false;
+        }
     };
 
     /**
@@ -545,6 +571,7 @@ public class Camera2BasicFragment extends Fragment
         playButton = (ImageButton) view.findViewById(R.id.playButton);
         playButton.setOnClickListener(onClickPlay);
         lightPoints = (ImageView) view.findViewById(R.id.lightPointers);
+        lightPoints.setOnTouchListener(tochLight);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         // TODO enfernen für Testing
         checkWriteStoragePermission();

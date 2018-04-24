@@ -25,6 +25,18 @@ import java.util.Random;
 // TODO : framerate Berechnung + Besserer Algoritmus für die Lichtpunkt erkennung
 public class encodeFootage {
     private int width;
+
+    public void setHellsterPunktX(int hellsterPunktX) {
+        this.hellsterPunktX = hellsterPunktX;
+    }
+
+    public void setHellsterPunktY(int hellsterPunktY) {
+        this.hellsterPunktY = hellsterPunktY;
+    }
+    public int[] getLightToch() {
+        return new int[] {hellsterPunktX,hellsterPunktY};
+    }
+
     private int hellsterPunktX;
     private int hellsterPunktY;
     private int scanRadius = 30;
@@ -58,6 +70,7 @@ public class encodeFootage {
         }
 
     }
+
     // TODO besserer Algoritmus! brightness Berechnung funktioniert immer noch mit kombination von Hellsterpunkt!
     public int[] getLightPoints(Bitmap bitmap) {
         int height = bitmap.getHeight();
@@ -65,10 +78,11 @@ public class encodeFootage {
         this.width = width;
         int[] data = new int[width * height];
         int[][] data2D = new int[width][height];
-        Bitmap b = darkenBitMap(bitmap);
+        Bitmap testo = enhanceImage(bitmap,1,-50f);
+        Bitmap b = darkenBitMap(testo);
         b.getPixels(data, 0, width, 0, 0, width, height);
-
         int hellsterWert = data[0];
+
         hellsterPunktX = 0;
         hellsterPunktY = 0;
         int brightestValue = 0; int R = 0; int G = 0; int B = 0; int n = 0;
@@ -76,7 +90,7 @@ public class encodeFootage {
         for(int h = 0; h < height; h++) {
             for(int w = 0; w < width; w++) {
                 data2D[w][h] = data[get1DPos(w,h)];
-                if (data2D[w][h] > Color.argb(255,252,252,252)){
+                if (data2D[w][h] > Color.argb(255,200,200,200)){
                     int color = data2D[w][h];
                     R += Color.red(color);
                     G += Color.green(color);
@@ -106,19 +120,20 @@ public class encodeFootage {
         int hits = 0;
 
         int[] data = new int[width * height];
+        Bitmap testo = enhanceImage(b,1,-50f);
         darkenBitMap(b).getPixels(data, 0, width, 0, 0, width, height);
         int hellsterWert = data[get1DPos(punktX,punktY)];
         for(int r = 0; r < scanRadius; r+=3) {
-            if(data[get1DPos(punktX+r,punktY)] > Color.argb(255,252,252,252) ||
-                data[get1DPos(punktX-r,punktY)] > Color.argb(255,252,252,252) ||
-                data[get1DPos(punktX,punktY+r)] > Color.argb(255,252,252,252) ||
-                data[get1DPos(punktX,punktY-r)] > Color.argb(255,252,252,252)) {
+            if(data[get1DPos(punktX+r,punktY)] > Color.argb(255,220,220,220) ||
+                data[get1DPos(punktX-r,punktY)] > Color.argb(255,220,220,220) ||
+                data[get1DPos(punktX,punktY+r)] > Color.argb(255,220,220,220) ||
+                data[get1DPos(punktX,punktY-r)] > Color.argb(255,220,220,220)) {
                 hits++;
                 // TODO neuer Hellster Punkt im Umfeld definieren.
             }
 
         }
-        if (hits > 5) {
+        if (hits > 4) {
             msgListKamera.add(1);
         }
         else
