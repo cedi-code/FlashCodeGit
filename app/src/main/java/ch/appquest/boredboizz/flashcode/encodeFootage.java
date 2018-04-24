@@ -124,10 +124,10 @@ public class encodeFootage {
         darkenBitMap(b).getPixels(data, 0, width, 0, 0, width, height);
         int hellsterWert = data[get1DPos(punktX,punktY)];
         for(int r = 0; r < scanRadius; r+=3) {
-            if(data[get1DPos(punktX+r,punktY)] > Color.argb(255,180,180,180) ||
-                data[get1DPos(punktX-r,punktY)] > Color.argb(255,180,180,180) ||
-                data[get1DPos(punktX,punktY+r)] > Color.argb(255,180,180,180) ||
-                data[get1DPos(punktX,punktY-r)] > Color.argb(255,180,180,180)) {
+            if(data[get1DPos(punktX+r,punktY)] > Color.argb(255,160,160,160) ||
+                data[get1DPos(punktX-r,punktY)] > Color.argb(255,160,160,160) ||
+                data[get1DPos(punktX,punktY+r)] > Color.argb(255,160,160,160) ||
+                data[get1DPos(punktX,punktY-r)] > Color.argb(255,160,160,160)) {
 
                 hits++;
                 // TODO neuer Hellster Punkt im Umfeld definieren.
