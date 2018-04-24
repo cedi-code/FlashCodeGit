@@ -372,7 +372,7 @@ public class Camera2BasicFragment extends Fragment
                     // We have nothing to do when the camera preview is working normally.
                     // TODO get current Frame?
                     counterTest++;
-                    if(counterTest >5) {
+                    if(counterTest >2) {
                         counterTest = 0;
                         Bitmap b = mTextureView.getBitmap(mTextureView.getWidth(),mTextureView.getHeight());
                         int[] lightPosHolder;
