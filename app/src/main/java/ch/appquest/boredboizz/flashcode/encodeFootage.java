@@ -118,8 +118,13 @@ public class encodeFootage {
             }
 
         }
-
-        msgListKamera.add(hits);
+        if (hits > 5) {
+            msgListKamera.add(1);
+        }
+        else
+        {
+            msgListKamera.add(0);
+        }
 
         return new int[] {punktX,punktY};
     }

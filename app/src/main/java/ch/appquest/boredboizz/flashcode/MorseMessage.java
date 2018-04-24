@@ -22,6 +22,20 @@ public class MorseMessage {
 
     public void transmitMorse(String[] morse) {
         try{
+            main.turnOnFlashLight();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            main.turnOffFlashLight();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         for (String zeichen : morse) {
             try {
                 for (char code : zeichen.toCharArray()) {

@@ -1029,12 +1029,19 @@ public class Camera2BasicFragment extends Fragment
         ArrayList<Integer> test = encode.getMsgListKamera();
         playButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.inactive));
         isPlaying = false;
+        MorseTranslater mt = new MorseTranslater();
+        int[] n = new int[encode.getMsgListKamera().size()]; // int arraylist in int array konvertieren
+        for (int i=0; i < n.length; i++)
+        {
+            n[i] = encode.getMsgListKamera().get(i).intValue();
+        }
+        String text = mt.morseToText(n);
+        showToast(text);
     }
     public void startScan() {
         //playButton.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
         playButton.setColorFilter(ContextCompat.getColor(getContext(), R.color.active));
         isPlaying = true;
-
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {

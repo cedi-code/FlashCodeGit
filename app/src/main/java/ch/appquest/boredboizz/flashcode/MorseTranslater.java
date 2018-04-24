@@ -41,11 +41,10 @@ public class MorseTranslater {
         initMorseTable();
     }
 
-    public String morseToText(String[] morse) {
-        String text = "";
+    public String morseToText(int[] morse) {
 
 
-        return text;
+        return "Dr Rückgabewärt";
     }
 
     public String[] textToMorse(String text) {

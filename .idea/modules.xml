@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FlashCodeGit.iml" filepath="$PROJECT_DIR$/FlashCodeGit.iml" />
-      <module fileurl="file://D:/5_daten/FlashCodeGit/FlashCodeGit.iml" filepath="D:/5_daten/FlashCodeGit/FlashCodeGit.iml" />
+      <module fileurl="file://D:\5_daten\FlashCodeGit\FlashCodeGit.iml" filepath="D:\5_daten\FlashCodeGit\FlashCodeGit.iml" />
+      <module fileurl="file://D:\5_daten\MorseCode\Project\FlashCodeGit\FlashCodeGit.iml" filepath="D:\5_daten\MorseCode\Project\FlashCodeGit\FlashCodeGit.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:/5_daten/FlashCodeGit/app/app.iml" filepath="D:/5_daten/FlashCodeGit/app/app.iml" />
+      <module fileurl="file://D:\5_daten\FlashCodeGit\app\app.iml" filepath="D:\5_daten\FlashCodeGit\app\app.iml" />
+      <module fileurl="file://D:\5_daten\MorseCode\Project\FlashCodeGit\app\app.iml" filepath="D:\5_daten\MorseCode\Project\FlashCodeGit\app\app.iml" />
     </modules>
   </component>
 </project>
